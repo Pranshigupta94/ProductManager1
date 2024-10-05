@@ -6,6 +6,7 @@ import co.pragra.learning.newproductmanager.entity.User;
 import co.pragra.learning.newproductmanager.exception.InvalidProductException;
 
 import co.pragra.learning.newproductmanager.exception.InvalidReviewException;
+import co.pragra.learning.newproductmanager.exception.ReviewNotFoundException;
 import co.pragra.learning.newproductmanager.repo.ReviewRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -66,14 +67,16 @@ public class ReviewService {
     }
 
     public Review updateReview(Review review) {
-        if (null != review && !review.getReviews().isEmpty() && review.getReviews().length() >= 10) {
+        if (null == review || review.getReviews().isEmpty() || review.getReviews().length() <= 10) {
+
+            throw new InvalidReviewException("Review can't be empty or null or less than 10");
+        }
             Optional<Review> reviewOptional = reviewRepo.findById(review.getId());
-            Review dbReview = reviewOptional.orElseThrow(() -> new InvalidReviewException("Review not found"));
+            Review dbReview = reviewOptional.orElseThrow(() -> new ReviewNotFoundException("Review not found"));
             dbReview.setReviews(review.getReviews());
             return reviewRepo.save(dbReview);
 
 
         }
-        return null;
+
     }
-}

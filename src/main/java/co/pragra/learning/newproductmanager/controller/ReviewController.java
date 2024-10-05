@@ -4,6 +4,8 @@ import co.pragra.learning.newproductmanager.Service.ReviewService;
 
 import co.pragra.learning.newproductmanager.entity.Review;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -19,8 +21,8 @@ public class ReviewController {
     }
 
     @PutMapping("/api/product/review")
-    public Review updateReview(@RequestBody Review review) {
-        return reviewService.updateReview(review);
+    public ResponseEntity<Review> updateReview(@RequestBody Review review) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(review));
     }
 
 }
